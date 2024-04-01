@@ -3,6 +3,7 @@
     import jakarta.persistence.*;
     import lombok.*;
 
+    import lombok.Builder;
     import java.util.ArrayList;
     import java.util.Collection;
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,5 +55,17 @@ public class TourTests {
         TourEntity foundTour = tourRepository.findById(savedTour.getId()).orElse(null);
         assertNotNull(foundTour);
         assertEquals(savedTour.getId(), foundTour.getId());
+    }
+    @Test
+    void deleteTourTest() {
+        long countBeforeDeletion = tourRepository.count();
+
+        tourRepository.delete(savedTour);
+
+        Optional<TourEntity> deletedTour = tourRepository.findById(savedTour.getId());
+        long countAfterDeletion = tourRepository.count();
+
+        assertFalse(deletedTour.isPresent());
+        assertEquals(countBeforeDeletion - 1, countAfterDeletion, "The tour count should decrease by one after deletion.");
     }
 }
