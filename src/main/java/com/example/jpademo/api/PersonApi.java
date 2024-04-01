@@ -1,9 +1,10 @@
 package com.example.jpademo.api;
 
 
-import com.example.jpademo.service.dtos.PersonDto;
 import com.example.jpademo.service.PersonService;
+import com.example.jpademo.service.dtos.PersonDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,13 @@ public class PersonApi {
     @PostMapping
     public void insertNewPerson(@RequestBody PersonDto person) {
         personService.saveNewPerson(person);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonDto> updatePerson(@PathVariable Long id, @RequestBody PersonDto personDto) {
+        // Logic to update a person using the service layer
+        PersonDto updatedPersonDto = personService.updatePerson(id, personDto);
+        return ResponseEntity.ok(updatedPersonDto);
     }
 
 }

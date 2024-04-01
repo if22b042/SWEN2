@@ -8,9 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import com.example.jpademo.service.dtos.PersonDto;
+import org.junit.jupiter.api.Assertions;
 
 @SpringBootTest
 @Transactional
@@ -92,6 +91,35 @@ class JpaDemoApplicationTests {
 
         System.out.println("find addresses by person:");
         addressRepository.findByPerson(anna).forEach(System.out::println);
+    }
+    @Test
+    public void testUpdatePerson() {
+        // Arrange: create and save a new person
+        PersonEntity person = PersonEntity.builder()
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .age(25)
+                .build();
+        person = personRepository.save(person);
+        Long personId = person.getId();
+
+        // Act: update the person's name and email
+        PersonDto updatedPersonDto = PersonDto.builder()
+                .name("Jane Doe")
+                .email("jane.doe@example.com")
+                .age(26)
+                .build();
+        PersonEntity foundPerson = personRepository.findById(personId).orElseThrow();
+        foundPerson.setName(updatedPersonDto.getName());
+        foundPerson.setEmail(updatedPersonDto.getEmail());
+        foundPerson.setAge(updatedPersonDto.getAge());
+        personRepository.save(foundPerson);
+
+        // Assert: fetch the person again and verify the updates
+        PersonEntity updatedPerson = personRepository.findById(personId).orElseThrow();
+        Assertions.assertEquals("Jane Doe", updatedPerson.getName());
+        Assertions.assertEquals("jane.doe@example.com", updatedPerson.getEmail());
+        Assertions.assertEquals(26, updatedPerson.getAge());
     }
 
 }

@@ -1,0 +1,13 @@
+# Backend Example
+
+### Rest Api
+
+use a tool like postman or insomnia
+
+* [GET http://localhost:8080/person](http://localhost:8080/person)
+* [POST http://localhost:8080/person](http://localhost:8080/person)
+RequestBody, eg.: {
+  "name": "Test",
+  "email": "mail@mail.com",
+  "age": 23
+  }
