@@ -7,15 +7,15 @@ import lombok.*;
 @Table(name = "TOUR")
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class TourEntity {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class TourEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    private String title;
+        private String title;
     private String description;
     private String startLocation;
     private String endLocation;

@@ -30,4 +30,15 @@ public class TourApi {
         return ResponseEntity.ok(tourService.getAllTours());
     }
 
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TourDto> updateTour(@PathVariable Long id, @RequestBody TourDto tourDto) {
+        log.info("Received TourDto to update: {}", tourDto);
+        TourDto updatedTour = tourService.updateTour(id, tourDto);
+        log.info("Updated TourDto: {}", updatedTour);
+        return ResponseEntity.ok(updatedTour);
+    }
+
+
+
 }

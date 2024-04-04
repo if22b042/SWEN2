@@ -68,4 +68,18 @@ public class TourTests {
         assertFalse(deletedTour.isPresent());
         assertEquals(countBeforeDeletion - 1, countAfterDeletion, "The tour count should decrease by one after deletion.");
     }
+
+    @Test
+    void updateTourTransportationTest() {
+        // Arrange
+        String newTransportation = "Bicycle";
+        savedTour.setTransportation(newTransportation);
+
+        tourRepository.save(savedTour);
+        TourEntity updatedTour = tourRepository.findById(savedTour.getId()).orElse(null);
+
+        assertNotNull(updatedTour);
+        assertEquals(newTransportation, updatedTour.getTransportation(), "The transportation should be updated to 'Bicycle'");
+    }
+
 }

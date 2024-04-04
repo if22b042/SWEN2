@@ -13,6 +13,8 @@ public interface TourService {
     TourDto saveTour(TourDto tourDto);
     List<TourDto> getAllTours();
 
+    TourDto updateTour(Long id, TourDto tourDto);
+
     Optional<TourDto> findTourById(long id);
 
 }

@@ -5,6 +5,7 @@ import com.example.jpademo.persistence.repositories.TourRepository;
 import com.example.jpademo.service.TourService;
 import com.example.jpademo.service.dtos.TourDto;
 import com.example.jpademo.service.mapper.TourMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,22 @@ public class TourServiceImpl implements TourService {
         return tourRepository.findById(id)
                 .map(tourMapper::toDto);
 
+    }
+    public List<TourDto> findToursByTime(int time) {
+        List<TourEntity> tourEntities = tourRepository.findByTime(time);
+        return tourEntities.stream()
+                .map(tourMapper::toDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public TourDto updateTour(Long id, TourDto tourDto) {
+        TourEntity tourEntity = tourRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tour not found with id " + id));
+
+        tourMapper.updateEntityFromDto(tourDto, tourEntity);
+
+        TourEntity savedEntity = tourRepository.save(tourEntity);
+        return tourMapper.toDto(savedEntity);
     }
 
 }

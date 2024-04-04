@@ -92,7 +92,6 @@ class JpaDemoApplicationTests {
         System.out.println("find addresses by person:");
         addressRepository.findByPerson(anna).forEach(System.out::println);
     }
-    @Test
     public void testUpdatePerson() {
         // Arrange: create and save a new person
         PersonEntity person = PersonEntity.builder()
@@ -121,6 +120,7 @@ class JpaDemoApplicationTests {
         Assertions.assertEquals("jane.doe@example.com", updatedPerson.getEmail());
         Assertions.assertEquals(26, updatedPerson.getAge());
     }
+
 
 
 }
