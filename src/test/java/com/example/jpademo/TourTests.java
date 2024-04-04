@@ -25,8 +25,8 @@ public class TourTests {
         TourEntity tour = new TourEntity();
         tour.setTitle("Vienna City Tour");
         tour.setDescription("A lovely tour around Vienna.");
-        tour.setFrom("Karlsplatz");
-        tour.setTo("Schönbrunn");
+        tour.setStartLocation("Karlsplatz");
+        tour.setEndLocation("Schönbrunn");
         tour.setTransportation("Bus");
         tour.setDistance(15);
         tour.setTime(30);

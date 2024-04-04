@@ -7,6 +7,7 @@ import com.example.jpademo.service.dtos.TourDto;
 import com.example.jpademo.service.mapper.TourMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,25 +17,27 @@ public class TourServiceImpl implements TourService {
 
     @Autowired
     private TourRepository tourRepository;
+    private final TourMapper tourMapper = TourMapper.INSTANCE;
 
     @Override
     public TourDto saveTour(TourDto tourDto) {
-        TourEntity tourEntity = TourMapper.INSTANCE.toEntity(tourDto);
+        TourEntity tourEntity = tourMapper.toEntity(tourDto);
         tourEntity = tourRepository.save(tourEntity);
-        return TourMapper.INSTANCE.toDto(tourEntity);
+        return tourMapper.toDto(tourEntity);
     }
 
     @Override
     public List<TourDto> getAllTours() {
         return tourRepository.findAll().stream()
-                .map(TourMapper.INSTANCE::toDto)
+                .map(tourMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<TourDto> findTourById(long l) {
-        return Optional.empty();
+    public Optional<TourDto> findTourById(long id) {
+        return tourRepository.findById(id)
+                .map(tourMapper::toDto);
+
     }
 
-    // Implement additional methods as needed
 }

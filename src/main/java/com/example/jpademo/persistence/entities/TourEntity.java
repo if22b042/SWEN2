@@ -17,8 +17,8 @@ public class TourEntity {
 
     private String title;
     private String description;
-    private String from;
-    private String to;
+    private String startLocation;
+    private String endLocation;
     private String transportation;
     private int distance;
     private int time;
