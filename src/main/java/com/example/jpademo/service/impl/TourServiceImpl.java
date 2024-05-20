@@ -9,6 +9,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,14 +20,24 @@ import java.util.stream.Collectors;
 @Service
 public class TourServiceImpl implements TourService {
 
+    private final TourRepository tourRepository;
+    private final TourMapper tourMapper;
+
     @Autowired
-    private TourRepository tourRepository;
-    private final TourMapper tourMapper = TourMapper.INSTANCE;
+    public TourServiceImpl(TourRepository tourRepository, TourMapper tourMapper) {
+        this.tourRepository = tourRepository;
+        this.tourMapper = tourMapper;
+    }
 
     @Override
     public TourDto saveTour(TourDto tourDto) {
+        System.out.println("DTO before mapping: " + tourDto);
         TourEntity tourEntity = tourMapper.toEntity(tourDto);
+        System.out.println("Entity after manual mapping: " + tourEntity);
+
         tourEntity = tourRepository.save(tourEntity);
+        System.out.println("Entity after saving: " + tourEntity);
+
         return tourMapper.toDto(tourEntity);
     }
 
@@ -38,14 +52,8 @@ public class TourServiceImpl implements TourService {
     public Optional<TourDto> findTourById(long id) {
         return tourRepository.findById(id)
                 .map(tourMapper::toDto);
+    }
 
-    }
-    public List<TourDto> findToursByTime(int time) {
-        List<TourEntity> tourEntities = tourRepository.findByTime(time);
-        return tourEntities.stream()
-                .map(tourMapper::toDto)
-                .collect(Collectors.toList());
-    }
     @Override
     public TourDto updateTour(Long id, TourDto tourDto) {
         TourEntity tourEntity = tourRepository.findById(id)
@@ -56,5 +64,4 @@ public class TourServiceImpl implements TourService {
         TourEntity savedEntity = tourRepository.save(tourEntity);
         return tourMapper.toDto(savedEntity);
     }
-
 }

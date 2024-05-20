@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.DatePicker?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.jpademo.javafx.Controllers.NewTourLogController" spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <Label text="Create New Tour Log"/>
+    <TextField fx:id="commentField" promptText="Comment"/>
+    <DatePicker fx:id="datePicker"/>
+    <TextField fx:id="difficultyField" promptText="Difficulty"/>
+    <TextField fx:id="totalDistanceField" promptText="Total Distance"/>
+    <TextField fx:id="totalTimeField" promptText="Total Time"/>
+    <TextField fx:id="ratingField" promptText="Rating"/>
+    <Button text="Save" onAction="#handleSave"/>
+    <Button text="Cancel" onAction="#handleCancel"/>
+</VBox>

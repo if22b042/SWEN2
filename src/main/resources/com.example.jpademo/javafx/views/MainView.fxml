@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.jpademo.javafx.Controllers.MainController">
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="File">
+                    <MenuItem text="New Tour" onAction="#handleNewTour"/>
+                    <MenuItem text="New Tour Log" onAction="#handleNewTourLog"/>
+                    <MenuItem text="Exit" onAction="#handleExit"/>
+                </Menu>
+                <Menu text="Edit">
+                    <!-- Add edit menu items here -->
+                </Menu>
+                <Menu text="Options">
+                    <!-- Add options menu items here -->
+                </Menu>
+                <Menu text="Help">
+                    <!-- Add help menu items here -->
+                </Menu>
+            </MenuBar>
+            <ToolBar>
+                <TextField fx:id="searchField" promptText="Search"/>
+                <Button text="Search" onAction="#handleSearch"/>
+            </ToolBar>
+        </VBox>
+    </top>
+    <center>
+        <SplitPane>
+            <VBox spacing="5">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <Label text="Tours"/>
+                <ListView fx:id="tourListView" VBox.vgrow="ALWAYS" onMouseClicked="#handleTourSelection"/>
+            </VBox>
+            <VBox spacing="5">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <Label text="Tour Logs"/>
+                <TableView fx:id="tourLogTableView" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="dateColumn" text="Date"/>
+                        <TableColumn fx:id="durationColumn" text="Duration"/>
+                        <TableColumn fx:id="distanceColumn" text="Distance"/>
+                        <TableColumn fx:id="ratingColumn" text="Rating"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

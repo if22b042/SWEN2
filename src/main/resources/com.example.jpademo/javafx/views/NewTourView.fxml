@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.jpademo.javafx.Controllers.NewTourController" spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <Label text="Create New Tour"/>
+    <TextField fx:id="titleField" promptText="Title"/>
+    <TextField fx:id="descriptionField" promptText="Description"/>
+    <Button text="Save" onAction="#handleSave"/>
+    <Button text="Cancel" onAction="#handleCancel"/>
+</VBox>
