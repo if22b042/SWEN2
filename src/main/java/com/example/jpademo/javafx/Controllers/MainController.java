@@ -4,7 +4,6 @@ import com.example.jpademo.service.dtos.TourDto;
 import com.example.jpademo.service.dtos.TourLogDto;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.java_websocket.client.WebSocketClient;
@@ -19,14 +19,19 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainController {
+
     @FXML
     private TextField searchField;
 
@@ -53,9 +58,6 @@ public class MainController {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080";
-    private final ObservableList<TourDto> tours = FXCollections.observableArrayList();
-    private final ObservableList<TourLogDto> tourLogs = FXCollections.observableArrayList();
-
     private WebSocketClient webSocketClient;
 
     @FXML
@@ -76,13 +78,12 @@ public class MainController {
     private void loadTours() {
         try {
             List<TourDto> tourList = Arrays.asList(restTemplate.getForObject(baseUrl + "/tours", TourDto[].class));
-            tours.setAll(tourList);
+            tourListView.setItems(FXCollections.observableArrayList(tourList));
         } catch (ResourceAccessException e) {
             System.err.println("Failed to connect to backend: " + e.getMessage());
             showAlert("Error", "Failed to load tours. Displaying default data.");
             loadDefaultTours();
         }
-        tourListView.setItems(tours);
     }
 
     private void loadDefaultTours() {
@@ -90,7 +91,7 @@ public class MainController {
         defaultTour.setId(1L);
         defaultTour.setTitle("Default Tour");
         defaultTour.setDescription("This is a default tour description.");
-        tours.add(defaultTour);
+        tourListView.getItems().add(defaultTour);
     }
 
     @FXML
@@ -104,13 +105,12 @@ public class MainController {
     private void loadTourLogs(Long tourId) {
         try {
             List<TourLogDto> tourLogList = Arrays.asList(restTemplate.getForObject(baseUrl + "/tourlogs/tour/" + tourId, TourLogDto[].class));
-            tourLogs.setAll(tourLogList);
+            tourLogTableView.setItems(FXCollections.observableArrayList(tourLogList));
         } catch (ResourceAccessException e) {
             System.err.println("Failed to connect to backend: " + e.getMessage());
             showAlert("Error", "Failed to load tour logs. Displaying default data.");
             loadDefaultTourLogs();
         }
-        tourLogTableView.setItems(tourLogs);
     }
 
     private void loadDefaultTourLogs() {
@@ -123,7 +123,7 @@ public class MainController {
         defaultLog.setTotalTime(60);
         defaultLog.setRating(4);
         defaultLog.setTourId(1L);
-        tourLogs.add(defaultLog);
+        tourLogTableView.getItems().add(defaultLog);
     }
 
     private void showAlert(String title, String content) {
@@ -136,7 +136,7 @@ public class MainController {
     @FXML
     private void handleNewTour() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.jpademo/javafx/views/NewTourView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/jpademo/javafx/views/NewTourView.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -151,13 +151,12 @@ public class MainController {
         }
     }
 
-
     @FXML
     private void handleNewTourLog() {
         TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();
         if (selectedTour != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.jpademo/javafx/views/NewTourLogView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/jpademo/javafx/views/NewTourLogView.fxml"));
                 Parent root = loader.load();
                 NewTourLogController controller = loader.getController();
                 controller.setTourId(selectedTour.getId());
@@ -217,6 +216,35 @@ public class MainController {
     private void handleEditLog() {
         // Implement logic to edit selected tour log
     }
+
+    @FXML
+    private void handleDownloadPdf() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            try {
+                byte[] pdfBytes = restTemplate.getForObject(baseUrl + "/api/download/pdf", byte[].class);
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    fos.write(pdfBytes);
+                }
+                showAlert("Success", "PDF downloaded successfully.", Alert.AlertType.INFORMATION);
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to download PDF.", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 
     private void connectToWebSocket() {
         try {

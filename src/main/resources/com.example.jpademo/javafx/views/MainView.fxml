@@ -18,7 +18,8 @@
                     <!-- Add edit menu items here -->
                 </Menu>
                 <Menu text="Options">
-                    <!-- Add options menu items here -->
+                    <MenuItem text="Download PDF" onAction="#handleDownloadPdf"/>
+
                 </Menu>
                 <Menu text="Help">
                     <!-- Add help menu items here -->
