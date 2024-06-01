@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.jpademo.javafx.Controllers.MainController">
@@ -19,7 +18,6 @@
                 </Menu>
                 <Menu text="Options">
                     <MenuItem text="Download PDF" onAction="#handleDownloadPdf"/>
-
                 </Menu>
                 <Menu text="Help">
                     <!-- Add help menu items here -->
@@ -32,28 +30,37 @@
         </VBox>
     </top>
     <center>
-        <SplitPane>
-            <VBox spacing="5">
+        <SplitPane orientation="HORIZONTAL">
+            <VBox spacing="10">
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
                 <Label text="Tours"/>
-                <ListView fx:id="tourListView" VBox.vgrow="ALWAYS" onMouseClicked="#handleTourSelection"/>
+                <ListView fx:id="tourListView" onMouseClicked="#handleTourSelection"/>
             </VBox>
-            <VBox spacing="5">
+            <VBox spacing="10">
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
-                <Label text="Tour Logs"/>
-                <TableView fx:id="tourLogTableView" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="dateColumn" text="Date"/>
-                        <TableColumn fx:id="durationColumn" text="Duration"/>
-                        <TableColumn fx:id="distanceColumn" text="Distance"/>
-                        <TableColumn fx:id="ratingColumn" text="Rating"/>
-                    </columns>
-                </TableView>
+                <Label text="Tour Details"/>
+                <TextArea fx:id="tourDetailsArea" wrapText="true" editable="false"/>
             </VBox>
         </SplitPane>
     </center>
+    <right>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Tour Logs"/>
+            <TableView fx:id="tourLogTableView">
+                <columns>
+                    <TableColumn fx:id="dateColumn" text="Date"/>
+                    <TableColumn fx:id="durationColumn" text="Duration"/>
+                    <TableColumn fx:id="distanceColumn" text="Distance"/>
+                    <TableColumn fx:id="ratingColumn" text="Rating"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </right>
 </BorderPane>

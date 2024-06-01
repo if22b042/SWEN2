@@ -39,7 +39,7 @@ public class MainController {
     private ListView<TourDto> tourListView;
 
     @FXML
-    private ImageView mapView;
+    private TextArea tourDetailsArea;
 
     @FXML
     private TableView<TourLogDto> tourLogTableView;
@@ -79,6 +79,17 @@ public class MainController {
         try {
             List<TourDto> tourList = Arrays.asList(restTemplate.getForObject(baseUrl + "/tours", TourDto[].class));
             tourListView.setItems(FXCollections.observableArrayList(tourList));
+            tourListView.setCellFactory(param -> new ListCell<>() {
+                @Override
+                protected void updateItem(TourDto item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item.getTitle());
+                    }
+                }
+            });
         } catch (ResourceAccessException e) {
             System.err.println("Failed to connect to backend: " + e.getMessage());
             showAlert("Error", "Failed to load tours. Displaying default data.");
@@ -98,8 +109,24 @@ public class MainController {
     private void handleTourSelection(MouseEvent event) {
         TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();
         if (selectedTour != null) {
+            displayTourDetails(selectedTour);
             loadTourLogs(selectedTour.getId());
         }
+    }
+
+    private void displayTourDetails(TourDto tour) {
+        StringBuilder details = new StringBuilder();
+        details.append("Tour ID: ").append(tour.getId()).append("\n");
+        details.append("Title: ").append(tour.getTitle()).append("\n");
+        details.append("Description: ").append(tour.getDescription()).append("\n");
+        details.append("Start Location: ").append(tour.getStartLocation()).append("\n");
+        details.append("End Location: ").append(tour.getEndLocation()).append("\n");
+        details.append("Transportation: ").append(tour.getTransportation()).append("\n");
+        details.append("Distance: ").append(tour.getDistance()).append("\n");
+        details.append("Time: ").append(tour.getTime()).append("\n");
+        details.append("Information: ").append(tour.getInformation()).append("\n");
+
+        tourDetailsArea.setText(details.toString());
     }
 
     private void loadTourLogs(Long tourId) {
@@ -244,7 +271,6 @@ public class MainController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
 
     private void connectToWebSocket() {
         try {
