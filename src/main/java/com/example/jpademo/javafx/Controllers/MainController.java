@@ -151,6 +151,7 @@ public class MainController {
         }
     }
 
+
     @FXML
     private void handleNewTourLog() {
         TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();

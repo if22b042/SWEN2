@@ -11,6 +11,11 @@
     <Label text="Create New Tour"/>
     <TextField fx:id="titleField" promptText="Title"/>
     <TextField fx:id="descriptionField" promptText="Description"/>
+    <TextField fx:id="startLocationField" promptText="Start Location"/>
+    <TextField fx:id="endLocationField" promptText="End Location"/>
+    <TextField fx:id="transportationField" promptText="Transportation"/>
+    <TextField fx:id="distanceField" promptText="Distance"/>
+    <TextArea fx:id="informationField" promptText="Additional Information"/>
     <Button text="Save" onAction="#handleSave"/>
     <Button text="Cancel" onAction="#handleCancel"/>
 </VBox>
