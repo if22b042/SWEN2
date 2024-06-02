@@ -1,53 +1,23 @@
 package com.example.jpademo.service;
 
-import com.example.jpademo.persistence.entities.TourLogEntity;
-import com.example.jpademo.persistence.repositories.TourLogRepository;
 import com.example.jpademo.service.dtos.TourLogDto;
-import com.example.jpademo.service.mapper.TourLogMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-@Service
-public class TourLogService {
+public interface TourLogService {
 
-    @Autowired
-    private TourLogRepository tourLogRepository;
+    TourLogDto saveTourLog(TourLogDto tourLogDto);
 
-    @Autowired
-    private TourLogMapper tourLogMapper;
+    List<TourLogDto> getAllTourLogs();
 
-    public TourLogDto saveTourLog(TourLogDto tourLogDto) {
-        TourLogEntity tourLogEntity = tourLogMapper.toEntity(tourLogDto);
-        TourLogEntity savedTourLog = tourLogRepository.save(tourLogEntity);
-        return tourLogMapper.toDto(savedTourLog);
-    }
+    List<TourLogDto> getTourLogsByTourId(Long tourId);
 
-    public List<TourLogDto> getAllTourLogs() {
-        return tourLogRepository.findAll().stream()
-                .map(tourLogMapper::toDto)
-                .collect(Collectors.toList());
-    }
+    TourLogDto updateTourLog(Long id, TourLogDto tourLogDto);
 
-    public List<TourLogDto> getTourLogsByTourId(Long tourId) {
-        return tourLogRepository.findByTourId(tourId).stream()
-                .map(tourLogMapper::toDto)
-                .collect(Collectors.toList());
-    }
+    void deleteTourLog(Long id);
 
-    public TourLogDto updateTourLog(Long id, TourLogDto tourLogDto) {
-        if (tourLogRepository.existsById(id)) {
-            TourLogEntity tourLogEntity = tourLogMapper.toEntity(tourLogDto);
-            tourLogEntity.setId(id);
-            TourLogEntity updatedTourLog = tourLogRepository.save(tourLogEntity);
-            return tourLogMapper.toDto(updatedTourLog);
-        }
-        return null;
-    }
+    void updateImagePath(Long id, String imagePath);
 
-    public void deleteTourLog(Long id) {
-        tourLogRepository.deleteById(id);
-    }
+    Optional<TourLogDto> findTourLogById(Long id);
 }

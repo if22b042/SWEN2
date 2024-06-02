@@ -11,35 +11,35 @@ import org.springframework.web.client.RestTemplate;
 public class NewTourController {
 
     @FXML
-    private TextField titleField;
+    public TextField titleField;
 
     @FXML
-    private TextField descriptionField;
+    public TextField descriptionField;
 
     @FXML
-    private TextField startLocationField;
+    public TextField startLocationField;
 
     @FXML
-    private TextField endLocationField;
+    public TextField endLocationField;
 
     @FXML
-    private TextField transportationField;
+    public TextField transportationField;
 
     @FXML
-    private TextField distanceField;
+    public TextField distanceField;
 
     @FXML
-    private TextField timeField;
+    public TextField timeField;
 
     @FXML
-    private TextArea informationField;
+    public TextArea informationField;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080";
-    private TourDto tourDto; // Add a field to hold the tour DTO
+    public TourDto tourDto; // Add a field to hold the tour DTO
 
     @FXML
-    private void handleSave() {
+    public void handleSave() {
         if (isInputValid()) {
             String title = titleField.getText();
             String description = descriptionField.getText();

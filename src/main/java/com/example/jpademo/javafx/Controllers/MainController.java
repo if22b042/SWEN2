@@ -1,5 +1,7 @@
 package com.example.jpademo.javafx.Controllers;
 
+import com.example.jpademo.javafx.Services.FileChooserService;
+import com.example.jpademo.javafx.Services.FileChooserServiceImpl;
 import com.example.jpademo.service.dtos.TourDto;
 import com.example.jpademo.service.dtos.TourLogDto;
 import javafx.application.Platform;
@@ -9,23 +11,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -56,9 +58,26 @@ public class MainController {
     @FXML
     private TableColumn<TourLogDto, String> ratingColumn;
 
+    @FXML
+    private TableColumn<TourLogDto, String> commentColumn;
+
+    @FXML
+    private TableColumn<TourLogDto, String> difficultyColumn;
+
+    @FXML
+    private TableColumn<TourLogDto, String> totalDistanceColumn;
+
+    @FXML
+    private TableColumn<TourLogDto, String> totalTimeColumn;
+
+    @FXML
+    private ImageView tourLogImageView;
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080";
     private WebSocketClient webSocketClient;
+
+    private FileChooserService fileChooserService = new FileChooserServiceImpl();
 
     @FXML
     private void initialize() {
@@ -67,12 +86,20 @@ public class MainController {
         durationColumn.setCellValueFactory(cellData -> cellData.getValue().totalTimeProperty().asString());
         distanceColumn.setCellValueFactory(cellData -> cellData.getValue().totalDistanceProperty().asString());
         ratingColumn.setCellValueFactory(cellData -> cellData.getValue().ratingProperty().asString());
+        commentColumn.setCellValueFactory(cellData -> cellData.getValue().commentProperty());
+        difficultyColumn.setCellValueFactory(cellData -> cellData.getValue().difficultyProperty());
+        totalDistanceColumn.setCellValueFactory(cellData -> cellData.getValue().totalDistanceProperty().asString());
+        totalTimeColumn.setCellValueFactory(cellData -> cellData.getValue().totalTimeProperty().asString());
 
         // Load initial data
         loadTours();
 
         // Connect to WebSocket
         connectToWebSocket();
+    }
+
+    public void setFileChooserService(FileChooserService fileChooserService) {
+        this.fileChooserService = fileChooserService;
     }
 
     private void loadTours() {
@@ -153,8 +180,51 @@ public class MainController {
         tourLogTableView.getItems().add(defaultLog);
     }
 
+    @FXML
+    private void handleTourLogSelection(MouseEvent event) {
+        TourLogDto selectedLog = tourLogTableView.getSelectionModel().getSelectedItem();
+        if (selectedLog != null) {
+            loadImageForTourLog(selectedLog.getId());
+        }
+    }
+
+    private void loadImageForTourLog(Long logId) {
+        //Image not working
+        try {
+            // Fetch the tour log to check if it has an image path
+            TourLogDto tourLog = restTemplate.getForObject(baseUrl + "/tourlogs/" + logId, TourLogDto.class);
+
+            // Check if the tour log has an image path
+            if (tourLog != null && tourLog.getImagePath() != null && !tourLog.getImagePath().isEmpty()) {
+                // Fetch the image bytes
+                byte[] imageBytes = restTemplate.getForObject(baseUrl + "/tourlogs/" + logId + "/image", byte[].class);
+
+                if (imageBytes != null && imageBytes.length > 0) {
+                    Image image = new Image(new ByteArrayInputStream(imageBytes));
+                    tourLogImageView.setImage(image);
+                } else {
+                    tourLogImageView.setImage(null);
+                }
+            } else {
+                tourLogImageView.setImage(null);
+            }
+        } catch (ResourceAccessException e) {
+            System.err.println("Failed to load image: " + e.getMessage());
+            showAlert("Error", "Failed to load image for the selected tour log.");
+            tourLogImageView.setImage(null);
+        } catch (HttpClientErrorException e) {
+            System.err.println("Failed to load image: " + e.getMessage());
+            showAlert("Error", "Failed to load image for the selected tour log.");
+            tourLogImageView.setImage(null);
+        }
+    }
+
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        showAlert(title, content, Alert.AlertType.ERROR);
+    }
+//Handles amount of variables showAlert can recieve
+    private void showAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
@@ -296,11 +366,8 @@ public class MainController {
     }
 
     @FXML
-    private void handleDownloadPdf() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        File file = fileChooser.showSaveDialog(null);
+    public void handleDownloadPdf() {
+        File file = fileChooserService.showSaveDialog(null);
 
         if (file != null) {
             try {
@@ -314,13 +381,6 @@ public class MainController {
                 showAlert("Error", "Failed to download PDF.", Alert.AlertType.ERROR);
             }
         }
-    }
-
-    private void showAlert(String title, String content, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     private void connectToWebSocket() {

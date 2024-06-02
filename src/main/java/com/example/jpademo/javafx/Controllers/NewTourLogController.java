@@ -2,12 +2,14 @@ package com.example.jpademo.javafx.Controllers;
 
 import com.example.jpademo.service.dtos.TourLogDto;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 
 public class NewTourLogController {
@@ -30,8 +32,13 @@ public class NewTourLogController {
     @FXML
     private TextField ratingField;
 
+    @FXML
+    private Label imageLabel;
+
+    private File selectedImageFile;
+
     private Long tourId;
-    private TourLogDto tourLogDto; // Add a field to hold the tour log DTO
+    private TourLogDto tourLogDto;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080";
@@ -41,7 +48,7 @@ public class NewTourLogController {
     }
 
     @FXML
-    private void handleSave() {
+    public void handleSave() {
         if (isInputValid()) {
             String comment = commentField.getText();
             LocalDate date = datePicker.getValue();
@@ -61,7 +68,10 @@ public class NewTourLogController {
                 newTourLog.setTotalTime((int) totalTime);
                 newTourLog.setRating(rating);
 
-                restTemplate.postForObject(baseUrl + "/tourlogs", newTourLog, TourLogDto.class);
+                TourLogDto savedTourLog = restTemplate.postForObject(baseUrl + "/tourlogs", newTourLog, TourLogDto.class);
+                if (selectedImageFile != null) {
+                    uploadImage(savedTourLog.getId(), selectedImageFile);
+                }
             } else {
                 // Update existing tour log
                 tourLogDto.setComment(comment);
@@ -72,11 +82,26 @@ public class NewTourLogController {
                 tourLogDto.setRating(rating);
 
                 restTemplate.put(baseUrl + "/tourlogs/" + tourLogDto.getId(), tourLogDto, TourLogDto.class);
+                if (selectedImageFile != null) {
+                    System.out.println("asldkfjlkajlsk");
+                    uploadImage(tourLogDto.getId(), selectedImageFile);
+                }
             }
 
             // Close the window after saving
             Stage stage = (Stage) commentField.getScene().getWindow();
             stage.close();
+        }
+    }
+
+    @FXML
+    private void handleChooseImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        selectedImageFile = fileChooser.showOpenDialog(commentField.getScene().getWindow());
+        if (selectedImageFile != null&&imageLabel!=null) {
+            imageLabel.setText(selectedImageFile.getName());
         }
     }
 
@@ -143,6 +168,16 @@ public class NewTourLogController {
         } else {
             showAlert("Invalid Fields", "Please correct invalid fields", errorMessage.toString());
             return false;
+        }
+    }
+
+    private void uploadImage(Long tourLogId, File imageFile) {
+        try {
+            byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+            restTemplate.postForObject(baseUrl + "/tour/" + tourLogId + "/image", imageBytes, Void.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to upload image.", "");
         }
     }
 

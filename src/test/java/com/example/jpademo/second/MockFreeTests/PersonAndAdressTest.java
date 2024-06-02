@@ -1,4 +1,4 @@
-package com.example.jpademo;
+package com.example.jpademo.second.MockFreeTests;
 
 import com.example.jpademo.persistence.entities.AddressEntity;
 import com.example.jpademo.persistence.entities.PersonEntity;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions;
 
 @SpringBootTest
 @Transactional
-class JpaDemoApplicationTests {
+class PersonAndAdressTest {
 
     @Autowired
     private PersonRepository personRepository;
@@ -92,6 +92,7 @@ class JpaDemoApplicationTests {
         System.out.println("find addresses by person:");
         addressRepository.findByPerson(anna).forEach(System.out::println);
     }
+    @Test
     public void testUpdatePerson() {
         // Arrange: create and save a new person
         PersonEntity person = PersonEntity.builder()
