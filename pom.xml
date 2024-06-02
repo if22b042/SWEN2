@@ -32,7 +32,13 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-            <dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.13.2</version>
+        </dependency>
+
+        <dependency>
                    <groupId>org.mapstruct</groupId>
                    <artifactId>mapstruct</artifactId>
                    <version>1.4.2.Final</version>
@@ -106,6 +112,45 @@
             <artifactId>spring-websocket</artifactId>
             <version>6.1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.11.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.11.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.3.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>4.0.16-alpha</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>4.0.16-alpha</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
 
@@ -125,8 +170,8 @@
                        <artifactId>maven-compiler-plugin</artifactId>
                        <version>3.8.1</version>
                        <configuration>
-                           <source>1.8</source>
-                           <target>1.8</target>
+                           <source>22</source>
+                           <target>22</target>
                            <annotationProcessorPaths>
                                <path>
                                    <groupId>org.mapstruct</groupId>
@@ -141,6 +186,7 @@
                            </annotationProcessorPaths>
                        </configuration>
                    </plugin>
+
                    <plugin>
                        <groupId>org.springframework.boot</groupId>
                        <artifactId>spring-boot-maven-plugin</artifactId>

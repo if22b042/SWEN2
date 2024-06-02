@@ -57,11 +57,16 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourDto updateTour(Long id, TourDto tourDto) {
         TourEntity tourEntity = tourRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tour not found with id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Tour not found with given id"));
 
         tourMapper.updateEntityFromDto(tourDto, tourEntity);
 
         TourEntity savedEntity = tourRepository.save(tourEntity);
         return tourMapper.toDto(savedEntity);
+    }
+
+    @Override
+    public void deleteTour(Long id) {
+        tourRepository.deleteById(id);
     }
 }

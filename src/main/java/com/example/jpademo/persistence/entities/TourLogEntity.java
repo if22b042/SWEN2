@@ -23,8 +23,13 @@ public class TourLogEntity {
     private int totalDistance;
     private int totalTime;
     private int rating;
-
+    private byte[] image;
+    private String imagePath;
     @ManyToOne
     @JoinColumn(name = "tour_id", nullable = false)
     private TourEntity tour;
+
+
+    // Getters and setters
+
 }

@@ -10,12 +10,31 @@
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
     <Label text="Create New Tour Log"/>
-    <TextField fx:id="commentField" promptText="Comment"/>
-    <DatePicker fx:id="datePicker"/>
-    <TextField fx:id="difficultyField" promptText="Difficulty"/>
-    <TextField fx:id="totalDistanceField" promptText="Total Distance"/>
-    <TextField fx:id="totalTimeField" promptText="Total Time"/>
-    <TextField fx:id="ratingField" promptText="Rating"/>
+    <HBox spacing="10">
+        <TextField fx:id="commentField" promptText="Comment"/>
+        <Label text="Brief comment about the tour"/>
+    </HBox>
+    <HBox spacing="10">
+        <DatePicker fx:id="datePicker"/>
+        <Label text="Date of the tour log"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="difficultyField" promptText="Difficulty"/>
+        <Label text="Difficulty level (Rating from 1(easy)-10(extreme))"/>
+    </HBox>
+    <Button text="Choose Image(not working)" onAction="#handleChooseImage"/>
+    <HBox spacing="10">
+        <TextField fx:id="totalDistanceField" promptText="Total Distance (km)"/>
+        <Label text="Total distance covered in kilometers"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="totalTimeField" promptText="Total Time (hours)"/>
+        <Label text="Total duration in hours"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="ratingField" promptText="Rating (1-5)"/>
+        <Label text="Rating of the tour (1 to 5)"/>
+    </HBox>
     <Button text="Save" onAction="#handleSave"/>
     <Button text="Cancel" onAction="#handleCancel"/>
 </VBox>

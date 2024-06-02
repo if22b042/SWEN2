@@ -1,4 +1,4 @@
-package com.example.jpademo;
+package com.example.jpademo.second.MockFreeTests;
 
 import com.example.jpademo.persistence.entities.TourEntity;
 import com.example.jpademo.persistence.repositories.TourRepository;

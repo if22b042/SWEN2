@@ -4,13 +4,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.jpademo.javafx.Controllers.NewTourController" spacing="10">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
     <Label text="Create New Tour"/>
-    <TextField fx:id="titleField" promptText="Title"/>
-    <TextField fx:id="descriptionField" promptText="Description"/>
+    <HBox spacing="10">
+        <TextField fx:id="titleField" promptText="Title"/>
+        <Label text="Title of the tour"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="descriptionField" promptText="Description"/>
+        <Label text="Brief description of the tour"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="startLocationField" promptText="Start Location"/>
+        <Label text="Starting point of the tour"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="endLocationField" promptText="End Location"/>
+        <Label text="Ending point of the tour"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="transportationField" promptText="Transportation"/>
+        <Label text="Mode of transportation (e.g., Car, Bike)"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="distanceField" promptText="Distance (km)"/>
+        <Label text="Total distance covered in kilometers"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextField fx:id="timeField" promptText="Time (hours)"/>
+        <Label text="Estimated duration in hours"/>
+    </HBox>
+    <HBox spacing="10">
+        <TextArea fx:id="informationField" promptText="Additional Information"/>
+        <Label text="Any other relevant information"/>
+    </HBox>
     <Button text="Save" onAction="#handleSave"/>
     <Button text="Cancel" onAction="#handleCancel"/>
 </VBox>

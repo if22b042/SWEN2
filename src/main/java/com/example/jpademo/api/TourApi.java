@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @RestController
@@ -14,6 +15,7 @@ import java.util.List;
 public class TourApi {
 
     private static final Logger log = LoggerFactory.getLogger(TourApi.class);
+
     @Autowired
     private TourService tourService;
 
@@ -30,7 +32,6 @@ public class TourApi {
         return ResponseEntity.ok(tourService.getAllTours());
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<TourDto> updateTour(@PathVariable Long id, @RequestBody TourDto tourDto) {
         log.info("Received TourDto to update: {}", tourDto);
@@ -39,6 +40,11 @@ public class TourApi {
         return ResponseEntity.ok(updatedTour);
     }
 
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
+        log.info("Received request to delete tour with id: {}", id);
+        tourService.deleteTour(id);
+        log.info("Deleted tour with id: {}", id);
+        return ResponseEntity.noContent().build();
+    }
 }
