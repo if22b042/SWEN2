@@ -14,7 +14,8 @@
                     <MenuItem text="Exit" onAction="#handleExit"/>
                 </Menu>
                 <Menu text="Edit">
-                    <!-- Add edit menu items here -->
+                    <MenuItem text="Delete Tour" onAction="#handleDeleteTour"/>
+                    <MenuItem text="Delete Tour Log" onAction="#handleDeleteLog"/>
                 </Menu>
                 <Menu text="Options">
                     <MenuItem text="Download PDF" onAction="#handleDownloadPdf"/>

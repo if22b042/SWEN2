@@ -163,7 +163,7 @@ public class MainController {
     @FXML
     private void handleNewTour() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/jpademo/javafx/views/NewTourView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.jpademo/javafx/views/NewTourView.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -183,7 +183,7 @@ public class MainController {
         TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();
         if (selectedTour != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/jpademo/javafx/views/NewTourLogView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.jpademo/javafx/views/NewTourLogView.fxml"));
                 Parent root = loader.load();
                 NewTourLogController controller = loader.getController();
                 controller.setTourId(selectedTour.getId());
@@ -221,23 +221,34 @@ public class MainController {
 
     @FXML
     private void handleDeleteTour() {
-        // Implement logic to delete selected tour
+        TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();
+        if (selectedTour != null) {
+            restTemplate.delete(baseUrl + "/tours/" + selectedTour.getId());
+            loadTours();
+            tourDetailsArea.clear();
+            tourLogTableView.getItems().clear();
+            showAlert("Success", "Tour deleted successfully.", Alert.AlertType.INFORMATION);
+        } else {
+            showAlert("Warning", "Please select a tour to delete.", Alert.AlertType.WARNING);
+        }
     }
 
     @FXML
-    private void handleEditTour() {
-        // Implement logic to edit selected tour
+    private void handleDeleteLog() {
+        TourLogDto selectedLog = tourLogTableView.getSelectionModel().getSelectedItem();
+        if (selectedLog != null) {
+            restTemplate.delete(baseUrl + "/tourlogs/" + selectedLog.getId());
+            loadTourLogs(selectedLog.getTourId());
+            showAlert("Success", "Tour log deleted successfully.", Alert.AlertType.INFORMATION);
+        } else {
+            showAlert("Warning", "Please select a tour log to delete.", Alert.AlertType.WARNING);
+        }
     }
-
     @FXML
     private void handleAddLog() {
         handleNewTourLog();
     }
 
-    @FXML
-    private void handleDeleteLog() {
-        // Implement logic to delete selected tour log
-    }
 
     @FXML
     private void handleEditLog() {
