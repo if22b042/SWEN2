@@ -32,6 +32,10 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourDto saveTour(TourDto tourDto) {
         System.out.println("DTO before mapping: " + tourDto);
+        if (tourDto==null) {
+            System.err.println("Error data is null");
+            return null;
+        }
         TourEntity tourEntity = tourMapper.toEntity(tourDto);
         System.out.println("Entity after manual mapping: " + tourEntity);
 

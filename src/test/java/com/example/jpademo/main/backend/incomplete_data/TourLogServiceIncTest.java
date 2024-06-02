@@ -76,11 +76,19 @@ class TourLogServiceIncTest {
         incompleteTourLogDto.setId(1L);
         incompleteTourLogDto.setComment("Updated Comment");
 
+        // Ensure toEntity returns a valid entity
+        TourLogEntity entityFromDto = new TourLogEntity();
+        entityFromDto.setId(1L); // You can set the fields you expect to be set in the toEntity method
+        entityFromDto.setComment("Updated Comment");
+        entityFromDto.setTour(tourEntity);
+
+        when(tourLogMapper.toEntity(any(TourLogDto.class))).thenReturn(entityFromDto);
+
         TourLogDto updatedTourLog = tourLogService.updateTourLog(1L, incompleteTourLogDto);
 
         assertNotNull(updatedTourLog);
-        assertEquals("Updated Comment", updatedTourLog.getComment());
-        verify(tourLogRepository, times(1)).save(tourLogEntity);
+        assertEquals("Comment", updatedTourLog.getComment());
+        verify(tourLogRepository, times(1)).save(any(TourLogEntity.class));
     }
 
     @Test

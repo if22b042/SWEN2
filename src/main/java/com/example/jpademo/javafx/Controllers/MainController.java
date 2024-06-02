@@ -18,7 +18,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -189,9 +188,7 @@ public class MainController {
     }
 
     private void loadImageForTourLog(Long logId) {
-        //Image not working
         try {
-            // Fetch the tour log to check if it has an image path
             TourLogDto tourLog = restTemplate.getForObject(baseUrl + "/tourlogs/" + logId, TourLogDto.class);
 
             // Check if the tour log has an image path
@@ -212,17 +209,13 @@ public class MainController {
             System.err.println("Failed to load image: " + e.getMessage());
             showAlert("Error", "Failed to load image for the selected tour log.");
             tourLogImageView.setImage(null);
-        } catch (HttpClientErrorException e) {
-            System.err.println("Failed to load image: " + e.getMessage());
-            showAlert("Error", "Failed to load image for the selected tour log.");
-            tourLogImageView.setImage(null);
         }
     }
 
     private void showAlert(String title, String content) {
         showAlert(title, content, Alert.AlertType.ERROR);
     }
-//Handles amount of variables showAlert can recieve
+
     private void showAlert(String title, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

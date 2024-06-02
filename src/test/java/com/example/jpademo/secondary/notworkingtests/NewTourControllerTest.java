@@ -1,11 +1,10 @@
-package com.example.jpademo.second.notworkingtests;
+package com.example.jpademo.secondary.notworkingtests;
 
 import com.example.jpademo.javafx.Controllers.NewTourController;
 import com.example.jpademo.service.dtos.TourDto;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
