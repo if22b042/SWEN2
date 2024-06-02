@@ -179,6 +179,31 @@ public class MainController {
     }
 
     @FXML
+    private void handleEditTour() {
+        TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();
+        if (selectedTour != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.jpademo/javafx/views/NewTourView.fxml"));
+                Parent root = loader.load();
+                NewTourController controller = loader.getController();
+                controller.setTourDto(selectedTour); // Set the selected tour to the controller
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Edit Tour");
+                stage.setScene(new Scene(root));
+                stage.showAndWait();
+                // Reload tours after editing
+                loadTours();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to open the edit tour form.");
+            }
+        } else {
+            showAlert("Warning", "Please select a tour to edit.", Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
     private void handleNewTourLog() {
         TourDto selectedTour = tourListView.getSelectionModel().getSelectedItem();
         if (selectedTour != null) {
@@ -200,6 +225,31 @@ public class MainController {
             }
         } else {
             showAlert("Warning", "Please select a tour first.");
+        }
+    }
+
+    @FXML
+    private void handleEditTourLog() {
+        TourLogDto selectedLog = tourLogTableView.getSelectionModel().getSelectedItem();
+        if (selectedLog != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.jpademo/javafx/views/NewTourLogView.fxml"));
+                Parent root = loader.load();
+                NewTourLogController controller = loader.getController();
+                controller.setTourLogDto(selectedLog); // Set the selected tour log to the controller
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Edit Tour Log");
+                stage.setScene(new Scene(root));
+                stage.showAndWait();
+                // Reload tour logs after editing
+                loadTourLogs(selectedLog.getTourId());
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to open the edit tour log form.");
+            }
+        } else {
+            showAlert("Warning", "Please select a tour log to edit.", Alert.AlertType.WARNING);
         }
     }
 
@@ -243,16 +293,6 @@ public class MainController {
         } else {
             showAlert("Warning", "Please select a tour log to delete.", Alert.AlertType.WARNING);
         }
-    }
-    @FXML
-    private void handleAddLog() {
-        handleNewTourLog();
-    }
-
-
-    @FXML
-    private void handleEditLog() {
-        // Implement logic to edit selected tour log
     }
 
     @FXML

@@ -36,6 +36,7 @@ public class NewTourController {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080";
+    private TourDto tourDto; // Add a field to hold the tour DTO
 
     @FXML
     private void handleSave() {
@@ -49,17 +50,32 @@ public class NewTourController {
             double time = Double.parseDouble(timeField.getText());
             String information = informationField.getText();
 
-            TourDto newTour = new TourDto();
-            newTour.setTitle(title);
-            newTour.setDescription(description);
-            newTour.setStartLocation(startLocation);
-            newTour.setEndLocation(endLocation);
-            newTour.setTransportation(transportation);
-            newTour.setDistance((int) distance);
-            newTour.setTime((int) time);
-            newTour.setInformation(information);
+            if (tourDto == null) {
+                // Create new tour
+                TourDto newTour = new TourDto();
+                newTour.setTitle(title);
+                newTour.setDescription(description);
+                newTour.setStartLocation(startLocation);
+                newTour.setEndLocation(endLocation);
+                newTour.setTransportation(transportation);
+                newTour.setDistance((int) distance);
+                newTour.setTime((int) time);
+                newTour.setInformation(information);
 
-            restTemplate.postForObject(baseUrl + "/tours", newTour, TourDto.class);
+                restTemplate.postForObject(baseUrl + "/tours", newTour, TourDto.class);
+            } else {
+                // Update existing tour
+                tourDto.setTitle(title);
+                tourDto.setDescription(description);
+                tourDto.setStartLocation(startLocation);
+                tourDto.setEndLocation(endLocation);
+                tourDto.setTransportation(transportation);
+                tourDto.setDistance((int) distance);
+                tourDto.setTime((int) time);
+                tourDto.setInformation(information);
+
+                restTemplate.put(baseUrl + "/tours/" + tourDto.getId(), tourDto, TourDto.class);
+            }
 
             // Close the window after saving
             Stage stage = (Stage) titleField.getScene().getWindow();
@@ -71,6 +87,20 @@ public class NewTourController {
     private void handleCancel() {
         Stage stage = (Stage) titleField.getScene().getWindow();
         stage.close();
+    }
+
+    public void setTourDto(TourDto tourDto) {
+        this.tourDto = tourDto;
+        if (tourDto != null) {
+            titleField.setText(tourDto.getTitle());
+            descriptionField.setText(tourDto.getDescription());
+            startLocationField.setText(tourDto.getStartLocation());
+            endLocationField.setText(tourDto.getEndLocation());
+            transportationField.setText(tourDto.getTransportation());
+            distanceField.setText(String.valueOf(tourDto.getDistance()));
+            timeField.setText(String.valueOf(tourDto.getTime()));
+            informationField.setText(tourDto.getInformation());
+        }
     }
 
     private boolean isInputValid() {

@@ -14,7 +14,9 @@
                     <MenuItem text="Exit" onAction="#handleExit"/>
                 </Menu>
                 <Menu text="Edit">
+                    <MenuItem text="Edit Tour" onAction="#handleEditTour"/>
                     <MenuItem text="Delete Tour" onAction="#handleDeleteTour"/>
+                    <MenuItem text="Edit Tour Log" onAction="#handleEditTourLog"/>
                     <MenuItem text="Delete Tour Log" onAction="#handleDeleteLog"/>
                 </Menu>
                 <Menu text="Options">

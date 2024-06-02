@@ -31,6 +31,7 @@ public class NewTourLogController {
     private TextField ratingField;
 
     private Long tourId;
+    private TourLogDto tourLogDto; // Add a field to hold the tour log DTO
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:8080";
@@ -49,16 +50,29 @@ public class NewTourLogController {
             double totalTime = Double.parseDouble(totalTimeField.getText());
             int rating = Integer.parseInt(ratingField.getText());
 
-            TourLogDto newTourLog = new TourLogDto();
-            newTourLog.setTourId(tourId);
-            newTourLog.setComment(comment);
-            newTourLog.setDateTime(date.atStartOfDay());
-            newTourLog.setDifficulty(difficulty);
-            newTourLog.setTotalDistance((int) totalDistance);
-            newTourLog.setTotalTime((int) totalTime);
-            newTourLog.setRating(rating);
+            if (tourLogDto == null) {
+                // Create new tour log
+                TourLogDto newTourLog = new TourLogDto();
+                newTourLog.setTourId(tourId);
+                newTourLog.setComment(comment);
+                newTourLog.setDateTime(date.atStartOfDay());
+                newTourLog.setDifficulty(difficulty);
+                newTourLog.setTotalDistance((int) totalDistance);
+                newTourLog.setTotalTime((int) totalTime);
+                newTourLog.setRating(rating);
 
-            restTemplate.postForObject(baseUrl + "/tourlogs", newTourLog, TourLogDto.class);
+                restTemplate.postForObject(baseUrl + "/tourlogs", newTourLog, TourLogDto.class);
+            } else {
+                // Update existing tour log
+                tourLogDto.setComment(comment);
+                tourLogDto.setDateTime(date.atStartOfDay());
+                tourLogDto.setDifficulty(difficulty);
+                tourLogDto.setTotalDistance((int) totalDistance);
+                tourLogDto.setTotalTime((int) totalTime);
+                tourLogDto.setRating(rating);
+
+                restTemplate.put(baseUrl + "/tourlogs/" + tourLogDto.getId(), tourLogDto, TourLogDto.class);
+            }
 
             // Close the window after saving
             Stage stage = (Stage) commentField.getScene().getWindow();
@@ -70,6 +84,18 @@ public class NewTourLogController {
     private void handleCancel() {
         Stage stage = (Stage) commentField.getScene().getWindow();
         stage.close();
+    }
+
+    public void setTourLogDto(TourLogDto tourLogDto) {
+        this.tourLogDto = tourLogDto;
+        if (tourLogDto != null) {
+            commentField.setText(tourLogDto.getComment());
+            datePicker.setValue(tourLogDto.getDateTime().toLocalDate());
+            difficultyField.setText(tourLogDto.getDifficulty());
+            totalDistanceField.setText(String.valueOf(tourLogDto.getTotalDistance()));
+            totalTimeField.setText(String.valueOf(tourLogDto.getTotalTime()));
+            ratingField.setText(String.valueOf(tourLogDto.getRating()));
+        }
     }
 
     private boolean isInputValid() {
