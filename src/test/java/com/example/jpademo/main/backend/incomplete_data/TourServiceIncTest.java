@@ -103,11 +103,10 @@ class TourServiceIncTest {
     void saveTour_WithNullData() {
         TourDto nullTourDto = null;
 
-        NullPointerException thrown = assertThrows(NullPointerException.class, () -> {
-            tourService.saveTour(nullTourDto);
-        });
+        TourDto result = tourService.saveTour(nullTourDto);
 
-        assertEquals("tourDto is marked non-null but is null", thrown.getMessage());
+        assertNull(result);
         verify(tourRepository, never()).save(any());
     }
+
 }

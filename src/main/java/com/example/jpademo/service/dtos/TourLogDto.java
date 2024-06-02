@@ -19,7 +19,7 @@ public class TourLogDto {
     private IntegerProperty totalTime = new SimpleIntegerProperty();
     private IntegerProperty rating = new SimpleIntegerProperty();
     private LongProperty tourId = new SimpleLongProperty();
-    private StringProperty imagePath = new SimpleStringProperty(); // New property for image path
+    private StringProperty imagePath = new SimpleStringProperty();
 
     // Getters and setters for JavaFX properties
     public Long getId() {
@@ -118,7 +118,6 @@ public class TourLogDto {
         return tourId;
     }
 
-    // New getter and setter for imagePath
     public String getImagePath() {
         return imagePath.get();
     }

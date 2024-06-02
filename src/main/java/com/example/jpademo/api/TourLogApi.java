@@ -39,15 +39,12 @@ public class TourLogApi {
         return ResponseEntity.ok(tourLogService.getAllTourLogs());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TourLogDto> getTourLogById(@PathVariable Long id) {
-        TourLogDto tourLogDto = tourLogService.findTourLogById(id).orElse(null);
-        if (tourLogDto != null) {
-            return ResponseEntity.ok(tourLogDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/tour/{tourId}")
+    public ResponseEntity<List<TourLogDto>> getTourLogsByTourId(@PathVariable Long tourId) {
+        List<TourLogDto> tourLogs = tourLogService.getTourLogsByTourId(tourId);
+        return ResponseEntity.ok(tourLogs);
     }
+
 
 
     @PutMapping("/{id}")
